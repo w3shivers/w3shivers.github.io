@@ -1,0 +1,65 @@
+@import url( 'base.css' );
+@import url( 'themify-icons/themify-icons.css' );
+
+.soon-main-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.soon-wrapper {
+    width: 95%;
+    height: 50%;
+}
+
+.soon-heading {
+    font: bold 12vw "Open Sans", sans-serif;
+    text-align: center;
+    display: block;
+}
+
+.soon-line {
+    margin: -2.5% 20% 5% 20%;
+}
+
+.name {
+    display: block;
+    margin: 15% 0 -5.5vw 0;
+    padding: 0 17%;
+    color: var( --color-blue );
+}
+
+.intro {
+    color: var( --color-light-grey );
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+    font-size: 1.6vw;
+    font-weight: lighter;
+}
+
+.intro span {
+    color: var( --color-white );
+    font-weight: normal;
+}
+
+.soon-social {
+    text-align: center;
+    width: 95%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 80px 0;
+}
+
+.social-link {
+    display: inline-block;
+    padding: 10px;
+    font-size: 1.6vw;
+    color: var(--color-light-grey);
+    transition: all .5s;
+}
+
+.social-link:hover {
+    color: var(--color-blue);
+    text-shadow: 0px 0px 20px var(--color-blue);
+    transform: scale(1.5);
+}
