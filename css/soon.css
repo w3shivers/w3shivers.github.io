@@ -64,7 +64,7 @@ p span {
 }
 
 .social-link:hover {
-    color: var(--color-vibrant);
-    text-shadow: 0px 0px 20px var(--color-vibrant);
+    color: var( --color-vibrant );
+    text-shadow: 0px 0px 20px var( --color-vibrant );
     transform: scale(1.5);
 }
