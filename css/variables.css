@@ -1,13 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-
 :root {
-    --color-dark-blue: rgb( 15, 23, 42 );
-    --color-dark-blue-tint: rgb(23, 34, 59);
-    --color-blue: rgb(67, 110, 211);
-    --color-white: #eee;
-    --color-light-grey: rgb(148, 163, 184);
-    --large-heading: ;
-    --small-heading: normal 2vw "Open Sans", sans-serif;
-    --border-thin: 0.5px solid var( --color-light-grey );
     --background-grid: linear-gradient( to right, var( --color-dark-blue-tint ) 1px, transparent 1px ), linear-gradient( to bottom, var( --color-dark-blue-tint ) 1px, transparent 1px );
+    --color-dark-blue: rgb( 15, 23, 42 );
+    --color-dark-blue-tint: rgb( 23, 34, 59 );
+    --color-vibrant: rgb( 234, 153, 40 );
+    --color-white: #eee;
+    --color-shadow: rgba( 67, 110, 211, 0.15 );
+    --cursor-box-shadow-small: 0px 0px 600px 150px var( --color-shadow );
+    --cursor-box-shadow-large: 0px 0px 12000px 300px var( --color-shadow );
 }

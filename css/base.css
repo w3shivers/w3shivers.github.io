@@ -6,41 +6,31 @@
 }
 
 ::selection {
-    background-color: rgba(80, 129, 244, 0.5);
+    background-color: rgba(234, 153, 40, 0.5);
     color: rgb(23, 34, 59);
+}
+
+html, body {
+    height: 100%;
 }
 
 body {
     background-color: var( --color-dark-blue );
     color: var( --color-white );
-    min-height: 100vh;
     background-image: var( --background-grid );
     background-size: 40px 40px;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-h1 {
-    font: var( --large-heading );
-}
+h1 { }
 
-h4, h5, h6 {
-    font: var( --small-heading );
-    color: var( --color-aqua );
-}
+h4, h5, h6 { }
 
-a {
-    color: var(--color-white);
-    text-decoration: none;
-}
+a { }
 
-a:hover {
-    color: var( --color-blue );
-}
+a:hover { }
 
-hr {
-    border: var( --border-thin ) ;
-    display: block;
-}
+hr { }
 
 #cursor {
     position: fixed;
@@ -65,12 +55,12 @@ body:hover #cursor {
 
 @keyframes cursor-shadow {
     0% {
-        box-shadow: 0px 0px 12000px 300px rgba(67, 110, 211, 0.15);
+        box-shadow: var( --cursor-box-shadow-large );
     }
     50% {
-        box-shadow: 0px 0px 600px 150px rgba(67, 110, 211, 0.15);
+        box-shadow: var( --cursor-box-shadow-small );
     }
     100% {
-        box-shadow: 0px 0px 12000px 300px rgba(67, 110, 211, 0.15);
+        box-shadow: var( --cursor-box-shadow-large );;
     }
 }
