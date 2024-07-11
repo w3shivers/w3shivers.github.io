@@ -1,19 +1,20 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "w3shivers",
+    "short_name": "w3shivers",
     "icons": [
         {
-            "src": "android-chrome-192x192.png?v=69",
+            "src": "android-chrome-192x192.png?USS=NCC-1701",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "android-chrome-512x512.png?v=69",
+            "src": "android-chrome-512x512.png?USS=NCC-1701",
             "sizes": "512x512",
             "type": "image/png"
         }
     ],
     "theme_color": "#0f172a",
     "background_color": "#0f172a",
+    "start_url": "https://w3shivers.github.io/",
     "display": "standalone"
 }
