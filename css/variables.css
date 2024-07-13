@@ -6,6 +6,6 @@
     --color-vibrant: rgb( 234, 153, 40 );
     --color-white: #eee;
     --color-shadow: rgba( 67, 110, 211, 0.15 );
-    --cursor-box-shadow-small: 0px 0px 600px 150px var( --color-shadow );
-    --cursor-box-shadow-large: 0px 0px 12000px 300px var( --color-shadow );
+    --cursor-box-shadow-small: 0px 0px 400px 100px var( --color-shadow );
+    --cursor-box-shadow-large: 0px 0px 8000px 200px var( --color-shadow );
 }
