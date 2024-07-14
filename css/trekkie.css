@@ -1,8 +1,29 @@
 @import url( 'base.css' );
-@import url( 'themify-icons/themify-icons.css' );
+@import url( 'themify-icons/themify-icons.css' ); 
+nav {
+    position: fixed;
+
+}
+nav a {
+    display: block;
+    padding: 20px;
+    color: aliceblue;
+}
 main, section {
     width: 100%;
     min-height: 100%;
+}
+
+main {
+    background-color: rgba(34, 255, 0, 0.1);
+    display: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: 0;
 }
 
 section {

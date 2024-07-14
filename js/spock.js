@@ -107,76 +107,146 @@ var keys = {
   arrow_down : 40
 };
 /**
- * Cursor
-*/
-let cursor = document.querySelector( "#cursor" );
-let body = document.querySelector( "body" );
-document.addEventListener( "mousemove", ( event ) => {
-  body.style.backgroundPositionX = event.pageX / -4 + "px";
-  body.style.backgroundPositionY = event.pageY / -4 + "px";
-  cursor.style.top = event.pageY + "px";
-  cursor.style.left = event.pageX + "px";
-} );
+ * Classes
+ */
+class Cursor {
+  cursor;
+  body;
 
-let section_element = document.getElementsByTagName( "section" );
-// console.log(section_element);
-console.log(section_element[0].clientHeight);
-document.addEventListener( "wheel", ( event ) => {
-  // console.log( event.layerY );
-} );
-/**
- * Scrolling
-*/
-function customsScroll( event, is_keys = false, key_code = null ) {
-  event.preventDefault();
-  let direction = 0;
-  if ( ( ! is_keys && event.deltaY < 0 ) 
-  || ( is_keys && [keys.arrow_left, keys.arrow_up].includes( key_code ) ) )
-    direction = -1;
-  else if ( ( ! is_keys && event.deltaY > 0 ) 
-  || ( is_keys && [keys.arrow_right, keys.arrow_down].includes( key_code ) ) ) {
-    direction = 1;
+  constructor( params = { cursor: null, body: null } ) {
+    this.cursor = params.cursor;
+    this.body = params.body;
+    document.addEventListener( "mousemove", ( event ) => {
+      this.body.style.backgroundPositionX = event.pageX / -4 + "px";
+      this.body.style.backgroundPositionY = event.pageY / -4 + "px";
+      this.cursor.style.top = event.pageY + "px";
+      this.cursor.style.left = event.pageX + "px";
+    } );
   }
-  // window.scrollTo();
-  window.scrollBy({
-    left: 0,
-    top: ( section_element[0].clientHeight * direction ),
-    behavior: "smooth"
-  });
-  // console.table( event.deltaY );
-  // document.dispatchEvent( EVENT );
-  // scrollBy( 0,  (  * direction ) );
-  // document.dispatchEvent(   );
 }
-function preventDefaultForScrollKeys( event ) {
-  if ( [keys.arrow_left, 
-    keys.arrow_up, 
-    keys.arrow_right, 
-    keys.arrow_down].includes( event.keyCode ) 
-  ) {
-    customsScroll( event, true, event.keyCode );
-    return false;
+class Scroll { // Need to fix Scrolling and scroll keys 
+  section_elements = null;
+  nav_links = null;
+  current_section_key = 0;
+  allow_scroll = true;
+  supports_passive = false; 
+  wheel_option;
+  wheel_event;
+
+  constructor( params = { elements: null, links: null, enable: false, passive: false, wheel } ) {
+    this.section_elements = params.elements;
+    this.nav_links = params.links;
+    this.wheel_option = ( ! params.passive ? { passive: false } : false );
+    this.wheel_event = params.wheel;
+    if ( params.enable ) {
+      this.enable();
+      return;
+    }
+    this.disable();
   }
-} 
-// modern Chrome requires { passive: false } when adding event
-var supports_passive = false;
+
+  disable() {
+    window.addEventListener( "DOMMouseScroll", this.custom, false ); // older FF
+    window.addEventListener( this.wheel_event, this.custom, this.wheel_option ); // modern desktop
+    window.addEventListener( "touchmove", this.custom, this.wheel_option ); // mobile
+    window.addEventListener( "keydown", this.preventDefaultForScrollKeys, false );
+  }
+
+  enable() { // Just in case it is needed.
+    window.removeEventListener( "DOMMouseScroll", this.custom, false );
+    window.removeEventListener( this.wheel_event, this.custom, this.wheel_option ); 
+    window.removeEventListener( "touchmove", this.custom, this.wheel_option );
+    window.removeEventListener( "keydown", this.preventDefaultForScrollKeys, false );
+  }
+
+  custom( event, is_keys = false, key_code = null ) {
+    event.preventDefault();
+    if ( ! this.allow_scroll ) { return; }
+    let direction = 0;
+    if ( ( ! is_keys && event.deltaY < 0 ) 
+      || ( is_keys && [keys.arrow_left, keys.arrow_up].includes( key_code ) ) )
+      direction = -1;
+    else if ( ( ! is_keys && event.deltaY > 0 ) 
+        || ( is_keys && [keys.arrow_right, keys.arrow_down].includes( key_code ) ) ) {
+      direction = 1;
+    }
+    this.scrollToSection( { direction: direction } );
+    this.allow_scroll = false;
+    setTimeout(() => { this.allow_scroll = true; }, 1500 );
+  }
+
+  scrollToSection( params = { direction: null, anchor: null } ) {
+    let new_key;
+    new_key = this.current_section_key;
+    if ( params.anchor != null ) {
+      for ( let index = 0; index < this.section_elements.length; index++ ) {
+        if ( this.section_elements[index].id == params.anchor ) {
+          new_key = index; break;
+        }
+      }
+    } else if ( params.direction != null ) {
+      new_key = ( ( params.direction == 1 ) ? this.current_section_key + 1 : this.current_section_key - 1 );
+    }
+    if ( this.section_elements[new_key] === undefined ) { return; }
+    this.current_section_key = new_key;
+    this.section_elements[new_key].scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+  }
+
+  preventDefaultForScrollKeys( event ) {
+    if ( [keys.arrow_left, 
+      keys.arrow_up, 
+      keys.arrow_right, 
+      keys.arrow_down].includes( event.keyCode ) 
+    ) {
+      this.custom( event, true, event.keyCode );
+      return false;
+    }
+  }
+
+}
+class Navigation {
+  nav_links = null;
+  ScrollClass = null;
+  constructor( params = { scroll_class: null } ) {
+    this.ScrollClass = params.scroll_class;
+    this.nav_links = this.ScrollClass.nav_links;
+    this.init();
+  }
+
+  init() {
+    for ( let index = 0; index < this.nav_links.length; index++ ) {
+      this.nav_links[index].addEventListener( "click", ( event ) => {
+        this.scroll( { event: event, element: this.nav_links[index] } );
+      } );
+    }
+  }
+
+  scroll( params = { event: null, element: null } ) {
+    if ( ! params.element || ! params.event ) { return; }
+    params.event.preventDefault();
+    let url_split = params.element.href.split( "#" );
+    if ( url_split.length <= 1 ) { return; }
+    this.ScrollClass.scrollToSection( { anchor: url_split[1] } )
+  }
+}
+let supports_passive = false;
 try {
   window.addEventListener( "test", null, Object.defineProperty( {}, "passive", {
     get: function () { supports_passive = true; } 
-  } ) );
+  } ) ); // modern Chrome requires { passive: false } when adding event
 } catch ( error ) {}
-var wheelOpt = ( supports_passive ? { passive: false } : false );
-var wheelEvent = "onwheel" in document.createElement( "test" ) ? "wheel" : "mousewheel";
-function disableScroll() {
-  window.addEventListener( "DOMMouseScroll", customsScroll, false ); // older FF
-  window.addEventListener( wheelEvent, customsScroll, wheelOpt ); // modern desktop
-  window.addEventListener( "touchmove", customsScroll, wheelOpt ); // mobile
-  window.addEventListener( "keydown", preventDefaultForScrollKeys, false );
-}
-function enableScroll() {
-  window.removeEventListener( "DOMMouseScroll", customsScroll, false );
-  window.removeEventListener( wheelEvent, customsScroll, wheelOpt ); 
-  window.removeEventListener( "touchmove", customsScroll, wheelOpt );
-  window.removeEventListener( "keydown", preventDefaultForScrollKeys, false );
-}
-disableScroll();
+/**
+ * Elements
+ */
+let cursor = document.querySelector( "#cursor" );
+let body = document.querySelector( "body" );
+let section_elements = document.getElementsByTagName( "section" );
+let nav_links = document.getElementsByTagName( "a" );
+let wheel = "onwheel" in document.createElement( "test" ) ? "wheel" : "mousewheel";
+
+/**
+ * Initiate Objects
+ */
+let cursor_object = new Cursor( { cursor: cursor, body: body } );
+let scroll_object = new Scroll( { elements: section_elements, links: nav_links, passive: supports_passive } );
+let nav_object = new Navigation( { scroll_class: scroll_object } ) ;
