@@ -197,15 +197,13 @@ class Scroll { // Need to fix Scrolling and scroll keys
     if ( this.section_elements[new_key] === undefined ) { return; }
     this.current_section_key = new_key;
     this.section_elements[new_key].scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-    this.updateUrlAnchor({ anchor_name: anchor_name });
+    this.updateUrlAnchor({ anchor_name: params.anchor_name });
   }
 
   updateUrlAnchor( params = { anchor_name: null } ) {
     try {
       if ( ! params.anchor_name ) { return false; }
-      setTimeout( () => {
-        window.location.hash = "#" + params.anchor_name; // Rudi - Does not work. interferes with smooth scroll
-      }, 300 );
+        history.replaceState(undefined, '', "#" + params.anchor_name);
       return true;
     } catch ( error ) {
       console.table( error );
