@@ -1,7 +1,7 @@
 /**
  * Enums
  */
-var keys = {
+var enum_key = {
   a : 97,
   A : 65,
   b : 98,
@@ -107,15 +107,27 @@ var keys = {
   arrow_down : 40
 };
 /**
+ * Shared Elements
+ */
+var global = {
+  body: document.querySelector( "body" ),
+  section_elements: document.getElementsByTagName( "section" ),
+  nav_links: document.getElementsByTagName( "a" ),
+}
+/**
  * Classes
  */
 class Cursor {
   cursor;
   body;
 
-  constructor( params = { cursor: null, body: null } ) {
-    this.cursor = params.cursor;
-    this.body = params.body;
+  constructor() {
+    this.cursor = document.querySelector( "#cursor" );
+    this.body = global.body;
+    this.init();
+  }
+
+  init() {
     document.addEventListener( "mousemove", ( event ) => {
       this.body.style.backgroundPositionX = event.pageX / -4 + "px";
       this.body.style.backgroundPositionY = event.pageY / -4 + "px";
@@ -133,16 +145,10 @@ class Scroll { // Need to fix Scrolling and scroll keys
   wheel_option;
   wheel_event;
 
-  constructor( params = { elements: null, links: null, enable: false, passive: false, wheel } ) {
-    this.section_elements = params.elements;
-    this.nav_links = params.links;
-    this.wheel_option = ( ! params.passive ? { passive: false } : false );
-    this.wheel_event = params.wheel;
-    if ( params.enable ) {
-      this.enable();
-      return;
-    }
-    this.disable();
+  constructor() {
+    console.log("constructor");
+    this.section_elements = global.section_elements;
+    this.nav_links = global.nav_links;
   }
 
   disable() {
@@ -164,10 +170,10 @@ class Scroll { // Need to fix Scrolling and scroll keys
     if ( ! this.allow_scroll ) { return; }
     let direction = 0;
     if ( ( ! is_keys && event.deltaY < 0 ) 
-      || ( is_keys && [keys.arrow_left, keys.arrow_up].includes( key_code ) ) )
+      || ( is_keys && [enum_key.arrow_left, enum_key.arrow_up].includes( key_code ) ) )
       direction = -1;
     else if ( ( ! is_keys && event.deltaY > 0 ) 
-        || ( is_keys && [keys.arrow_right, keys.arrow_down].includes( key_code ) ) ) {
+        || ( is_keys && [enum_key.arrow_right, enum_key.arrow_down].includes( key_code ) ) ) {
       direction = 1;
     }
     this.scrollToSection( { direction: direction } );
@@ -175,12 +181,13 @@ class Scroll { // Need to fix Scrolling and scroll keys
     setTimeout(() => { this.allow_scroll = true; }, 1500 );
   }
 
-  scrollToSection( params = { direction: null, anchor: null } ) {
+  scrollToSection( params = { direction: null, anchor_name: null } ) { // Works
     let new_key;
+    console.log("scrollToSection");
     new_key = this.current_section_key;
-    if ( params.anchor != null ) {
+    if ( params.anchor_name != null ) {
       for ( let index = 0; index < this.section_elements.length; index++ ) {
-        if ( this.section_elements[index].id == params.anchor ) {
+        if ( this.section_elements[index].id == params.anchor_name ) {
           new_key = index; break;
         }
       }
@@ -190,13 +197,26 @@ class Scroll { // Need to fix Scrolling and scroll keys
     if ( this.section_elements[new_key] === undefined ) { return; }
     this.current_section_key = new_key;
     this.section_elements[new_key].scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+    this.updateUrlAnchor({ anchor_name: anchor_name });
+  }
+
+  updateUrlAnchor( params = { anchor_name: null } ) {
+    try {
+      if ( ! params.anchor_name ) { return false; }
+      setTimeout( () => {
+        window.location.hash = "#" + params.anchor_name; // Rudi - Does not work. interferes with smooth scroll
+      }, 300 );
+      return true;
+    } catch ( error ) {
+      console.table( error );
+    }
   }
 
   preventDefaultForScrollKeys( event ) {
-    if ( [keys.arrow_left, 
-      keys.arrow_up, 
-      keys.arrow_right, 
-      keys.arrow_down].includes( event.keyCode ) 
+    if ( [enum_key.arrow_left, 
+      enum_key.arrow_up, 
+      enum_key.arrow_right, 
+      enum_key.arrow_down].includes( event.keyCode ) 
     ) {
       this.custom( event, true, event.keyCode );
       return false;
@@ -204,19 +224,16 @@ class Scroll { // Need to fix Scrolling and scroll keys
   }
 
 }
-class Navigation {
-  nav_links = null;
-  ScrollClass = null;
-  constructor( params = { scroll_class: null } ) {
-    this.ScrollClass = params.scroll_class;
-    this.nav_links = this.ScrollClass.nav_links;
+class Navigation extends Scroll {
+  constructor() {
+    super();
     this.init();
   }
 
   init() {
     for ( let index = 0; index < this.nav_links.length; index++ ) {
       this.nav_links[index].addEventListener( "click", ( event ) => {
-        this.scroll( { event: event, element: this.nav_links[index] } );
+        this.scroll({ event: event, element: this.nav_links[index] });
       } );
     }
   }
@@ -224,29 +241,24 @@ class Navigation {
   scroll( params = { event: null, element: null } ) {
     if ( ! params.element || ! params.event ) { return; }
     params.event.preventDefault();
-    let url_split = params.element.href.split( "#" );
-    if ( url_split.length <= 1 ) { return; }
-    this.ScrollClass.scrollToSection( { anchor: url_split[1] } )
+    let anchor = this.tryGetAnchorName({ element: params.element });
+    if ( ! anchor ) { return; };
+    console.log("scroll");
+    this.scrollToSection({ anchor_name: anchor })
+  }
+
+  tryGetAnchorName( params = { element: null } ) {
+    try {
+      let url_split = params.element.href.split( "#" );
+      return url_split[1];
+    } catch ( error ) {
+      console.table( error );
+    }
+    return null;
   }
 }
-let supports_passive = false;
-try {
-  window.addEventListener( "test", null, Object.defineProperty( {}, "passive", {
-    get: function () { supports_passive = true; } 
-  } ) ); // modern Chrome requires { passive: false } when adding event
-} catch ( error ) {}
 /**
- * Elements
+ * Initiate
  */
-let cursor = document.querySelector( "#cursor" );
-let body = document.querySelector( "body" );
-let section_elements = document.getElementsByTagName( "section" );
-let nav_links = document.getElementsByTagName( "a" );
-let wheel = "onwheel" in document.createElement( "test" ) ? "wheel" : "mousewheel";
-
-/**
- * Initiate Objects
- */
-let cursor_object = new Cursor( { cursor: cursor, body: body } );
-let scroll_object = new Scroll( { elements: section_elements, links: nav_links, passive: supports_passive } );
-let nav_object = new Navigation( { scroll_class: scroll_object } ) ;
+let cursor_object = new Cursor();
+let nav_object = new Navigation();
