@@ -140,34 +140,34 @@ class Scroll { // Need to fix Scrolling and scroll keys
   section_elements = null;
   nav_links = null;
   current_section_key = 0;
-  allow_scroll = true;
-  supports_passive = false; 
-  wheel_option;
-  wheel_event;
 
   constructor() {
-    console.log("constructor");
     this.section_elements = global.section_elements;
     this.nav_links = global.nav_links;
+    this.initOptions();
   }
 
-  disable() {
-    window.addEventListener( "DOMMouseScroll", this.custom, false ); // older FF
-    window.addEventListener( this.wheel_event, this.custom, this.wheel_option ); // modern desktop
-    window.addEventListener( "touchmove", this.custom, this.wheel_option ); // mobile
+  initOptions() {
+    // window.addEventListener( this.wheel_event, this.custom, this.wheel_option ); // modern desktop
+    // window.addEventListener( "touchmove", this.custom, this.wheel_option ); // mobile
+    console.log("start");
+    window.onscroll = function() { alert("Scrolled"); };
+    
+    onwheel = ( event ) => {
+      console.log( event.deltaY );
+    };
+    window.addEventListener( "touchmove", this.yDirection, false );
+    console.log("middle");
     window.addEventListener( "keydown", this.preventDefaultForScrollKeys, false );
+    console.log("after");
   }
 
-  enable() { // Just in case it is needed.
-    window.removeEventListener( "DOMMouseScroll", this.custom, false );
-    window.removeEventListener( this.wheel_event, this.custom, this.wheel_option ); 
-    window.removeEventListener( "touchmove", this.custom, this.wheel_option );
-    window.removeEventListener( "keydown", this.preventDefaultForScrollKeys, false );
+  yDirection( params = {  } ) {
+    console.log("mobile");
+    console.table(params);
   }
 
   custom( event, is_keys = false, key_code = null ) {
-    event.preventDefault();
-    if ( ! this.allow_scroll ) { return; }
     let direction = 0;
     if ( ( ! is_keys && event.deltaY < 0 ) 
       || ( is_keys && [enum_key.arrow_left, enum_key.arrow_up].includes( key_code ) ) )
@@ -177,13 +177,10 @@ class Scroll { // Need to fix Scrolling and scroll keys
       direction = 1;
     }
     this.scrollToSection( { direction: direction } );
-    this.allow_scroll = false;
-    setTimeout(() => { this.allow_scroll = true; }, 1500 );
   }
 
   scrollToSection( params = { direction: null, anchor_name: null } ) { // Works
     let new_key;
-    console.log("scrollToSection");
     new_key = this.current_section_key;
     if ( params.anchor_name != null ) {
       for ( let index = 0; index < this.section_elements.length; index++ ) {
@@ -216,6 +213,7 @@ class Scroll { // Need to fix Scrolling and scroll keys
       enum_key.arrow_right, 
       enum_key.arrow_down].includes( event.keyCode ) 
     ) {
+      event.preventDefault();
       this.custom( event, true, event.keyCode );
       return false;
     }
@@ -225,10 +223,10 @@ class Scroll { // Need to fix Scrolling and scroll keys
 class Navigation extends Scroll {
   constructor() {
     super();
-    this.init();
+    this.initClick();
   }
 
-  init() {
+  initClick() {
     for ( let index = 0; index < this.nav_links.length; index++ ) {
       this.nav_links[index].addEventListener( "click", ( event ) => {
         this.scroll({ event: event, element: this.nav_links[index] });
@@ -241,7 +239,6 @@ class Navigation extends Scroll {
     params.event.preventDefault();
     let anchor = this.tryGetAnchorName({ element: params.element });
     if ( ! anchor ) { return; };
-    console.log("scroll");
     this.scrollToSection({ anchor_name: anchor })
   }
 
