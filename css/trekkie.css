@@ -36,3 +36,17 @@ section {
 section h1 {
     margin-top: 20%;
 }
+
+
+
+/* Temp elements for testing */
+#mobile_results {
+    position: fixed;
+    color: antiquewhite;
+    background-color: rgb( 179, 58, 58 );
+    margin-top: 2%;
+    right: 0;
+    width: 70%;
+    padding: 20px 40px;
+    font-size: 16px;
+}

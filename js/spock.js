@@ -113,6 +113,8 @@ var global = {
   body: document.querySelector( "body" ),
   section_elements: document.getElementsByTagName( "section" ),
   nav_links: document.getElementsByTagName( "a" ),
+  main_element: document.getElementById( "main" ),
+  mobile_results: document.getElementById( "mobile_results" ),
 }
 /**
  * Classes
@@ -137,46 +139,37 @@ class Cursor {
   }
 }
 class Scroll { // Need to fix Scrolling and scroll keys 
-  section_elements = null;
   nav_links = null;
   current_section_key = 0;
+  scroll_element = null
+  section_elements = null;
 
   constructor() {
     this.section_elements = global.section_elements;
     this.nav_links = global.nav_links;
-    this.initOptions();
+    this.scroll_element = global.main_element;
+    this.initEvents();
   }
 
-  initOptions() {
+  initEvents() {
     // window.addEventListener( this.wheel_event, this.custom, this.wheel_option ); // modern desktop
     // window.addEventListener( "touchmove", this.custom, this.wheel_option ); // mobile
-    console.log("start");
-    window.onscroll = function() { alert("Scrolled"); };
-    
-    onwheel = ( event ) => {
-      console.log( event.deltaY );
+    global.main_element.onscroll = ( event ) => {
+      // event_text = "onscroll";
+      global.mobile_results.innerHTML = "onscroll";
+      console.table( event );
     };
-    window.addEventListener( "touchmove", this.yDirection, false );
-    console.log("middle");
-    window.addEventListener( "keydown", this.preventDefaultForScrollKeys, false );
-    console.log("after");
-  }
-
-  yDirection( params = {  } ) {
-    console.log("mobile");
-    console.table(params);
-  }
-
-  custom( event, is_keys = false, key_code = null ) {
-    let direction = 0;
-    if ( ( ! is_keys && event.deltaY < 0 ) 
-      || ( is_keys && [enum_key.arrow_left, enum_key.arrow_up].includes( key_code ) ) )
-      direction = -1;
-    else if ( ( ! is_keys && event.deltaY > 0 ) 
-        || ( is_keys && [enum_key.arrow_right, enum_key.arrow_down].includes( key_code ) ) ) {
-      direction = 1;
-    }
-    this.scrollToSection( { direction: direction } );
+    
+    // onwheel = ( event ) => { 
+    //   global.mobile_results.innerHTML = "onwheel";
+    //   console.log( event.deltaY ); };
+    onkeydown = ( event ) => { 
+      global.mobile_results.innerHTML = "onkeydown";
+      this.overwriteKeys( event ); };
+      // ontouchmove = ( event ) => { 
+      //   global.mobile_results.innerHTML = "ontouchmove";
+      // console.table( event ) }
+    // window.addEventListener( "touchmove", this.yDirection, false );
   }
 
   scrollToSection( params = { direction: null, anchor_name: null } ) { // Works
@@ -207,16 +200,16 @@ class Scroll { // Need to fix Scrolling and scroll keys
     }
   }
 
-  preventDefaultForScrollKeys( event ) {
-    if ( [enum_key.arrow_left, 
-      enum_key.arrow_up, 
-      enum_key.arrow_right, 
-      enum_key.arrow_down].includes( event.keyCode ) 
-    ) {
-      event.preventDefault();
-      this.custom( event, true, event.keyCode );
-      return false;
+  overwriteKeys( event ) {
+    if ( ! [enum_key.arrow_up, enum_key.arrow_down].includes( event.keyCode ) ) { return; }
+    event.preventDefault();
+    let direction = 0;
+    if ( enum_key.arrow_up == event.keyCode ) {
+      direction = -1;
+    } else if ( enum_key.arrow_down == event.keyCode ) {
+      direction = 1;
     }
+    this.scrollToSection({ direction: direction });
   }
 
 }
