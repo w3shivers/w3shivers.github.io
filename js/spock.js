@@ -144,24 +144,82 @@ class Cursor {
 class Scroll { // Need to fix Scrolling and scroll keys 
   nav_links = null;
   current_section_key = 0;
-  scroll_element = null
+  current_element = null;
+  last_scroll_position = 0;
+  current_section = {
+    id: null,
+    key: 0,
+    element: null
+  };
+  next_section = {
+    id: null,
+    key: 0,
+    element: null
+  };
+  main_element = null;
+  current_direction = 0;
   section_elements = null;
+  navigation_class = null;
 
   constructor() {
     this.section_elements = global.section_elements;
     this.nav_links = global.nav_links;
+    this.main_element = global.main_element;
     this.scroll_element = global.main_element;
+    this.current_section = {
+      id: this.section_elements[0].id,
+      key: 0,
+      element: this.section_elements[0]
+    }
     this.initEvents();
   }
 
   initEvents() {
-    global.main_element.onscroll = ( event ) => {
-      global.mobile_results.innerHTML = "onscroll";
-      // console.table( event );
-    };
-    onkeydown = ( event ) => { 
-      global.mobile_results.innerHTML = "onkeydown";
-      this.overwriteKeys( event ); };
+    this.main_element.onscroll = ( event ) => { this.manageSection() };
+    onkeydown = ( event ) => { this.overwriteKeys({ event: event }); };
+  }
+
+  manageSection() {
+    try {
+      this.determineHasDirectionChanged();
+      if ( this.next_section.id == null || this.next_section.id === undefined ) { this.updateNextElement(); return; }
+      let element_offset = this.next_section.element.getBoundingClientRect().y * this.current_direction;
+      if ( element_offset < ( this.main_element.clientHeight / 2 ) ) {
+        let previous_id = this.current_section.id;
+        this.current_section = this.next_section;
+        this.navigation_class.updateLinks({ previous: previous_id, current: this.current_section.id });
+        this.updateNextElement();
+        this.updateUrlAnchor({ anchor_name: this.current_section.id });
+      }
+    } catch( error ) {
+      console.table( error );
+    }
+  }
+
+  updateNextElement() {
+    let next_key = this.current_section.key + this.current_direction;
+    if ( this.section_elements[next_key] !== undefined ) { 
+      this.next_section = {
+        id: this.section_elements[next_key].id,
+        key: next_key,
+        element: this.section_elements[next_key]
+      }
+      return;
+    }
+  }
+
+  determineHasDirectionChanged() {
+    let element_offset = this.section_elements[0].getBoundingClientRect().y;
+    let scroll_direction = 0;
+    if ( element_offset > this.last_scroll_position ) {
+        scroll_direction = -1;
+    } else if ( element_offset < this.last_scroll_position ) {
+        scroll_direction = 1;
+    }
+    let has_changed = (( scroll_direction != this.current_direction ) ? true : false );
+    this.current_direction = scroll_direction;
+    this.last_scroll_position = element_offset;
+    return has_changed;
   }
 
   scrollToSection( params = { direction: null, anchor_name: null } ) { // Works
@@ -185,20 +243,21 @@ class Scroll { // Need to fix Scrolling and scroll keys
   updateUrlAnchor( params = { anchor_name: null } ) {
     try {
       if ( ! params.anchor_name ) { return false; }
-        history.replaceState(undefined, '', "#" + params.anchor_name);
+        history.replaceState( undefined, '', "#" + params.anchor_name );
       return true;
     } catch ( error ) {
       console.table( error );
     }
   }
 
-  overwriteKeys( event ) {
-    if ( ! [enum_key.arrow_up, enum_key.arrow_down].includes( event.keyCode ) ) { return; }
-    event.preventDefault();
+  overwriteKeys( params = { event: null } ) {
+    // console.table( this.navigation_class );
+    params.event.preventDefault();
+    if ( ! [enum_key.arrow_up, enum_key.arrow_down].includes( params.event.keyCode ) ) { return; }
     let direction = 0;
-    if ( enum_key.arrow_up == event.keyCode ) {
+    if ( enum_key.arrow_up == params.event.keyCode ) {
       direction = -1;
-    } else if ( enum_key.arrow_down == event.keyCode ) {
+    } else if ( enum_key.arrow_down == params.event.keyCode ) {
       direction = 1;
     }
     this.scrollToSection({ direction: direction });
@@ -206,16 +265,44 @@ class Scroll { // Need to fix Scrolling and scroll keys
 
 }
 class Navigation extends Scroll {
+  selected_class_name = "myClass";
+
   constructor() {
     super();
+    this.navigation_class = this;
     this.initClick();
+    this.pageLoad();
+  }
+
+  pageLoad() {
+    let anchor = this.tryGetAnchorName({ from_url: true });
+    anchor = ( anchor ) ? anchor : this.section_elements[0].id;
+    this.scrollToSection({ anchor_name: anchor })
   }
 
   initClick() {
     for ( let index = 0; index < this.nav_links.length; index++ ) {
       this.nav_links[index].addEventListener( "click", ( event ) => {
         this.scroll({ event: event, element: this.nav_links[index] });
-      } );
+      });
+    }
+  }
+
+  updateLinks( params = { previous: null, current: null } ) {
+    let link_hash = null;
+    for ( let index = 0; index < this.nav_links.length; index++ ) {
+      link_hash = this.nav_links[index].href.split( "#" )[1];
+      console.table({
+        previous: params.previous,
+        current: params.current,
+        id: link_hash,
+      })
+      if ( params.previous != null && params.previous == link_hash ) {
+        this.nav_links[index].classList.remove( this.selected_class_name );
+      }
+      if ( params.current == link_hash ) {
+        this.nav_links[index].classList.add( this.selected_class_name );
+      }
     }
   }
 
@@ -227,10 +314,15 @@ class Navigation extends Scroll {
     this.scrollToSection({ anchor_name: anchor })
   }
 
-  tryGetAnchorName( params = { element: null } ) {
+  tryGetAnchorName( params = { element: null, from_url: false } ) {
     try {
-      let url_split = params.element.href.split( "#" );
-      return url_split[1];
+      let url_split = null;
+      if ( ! params.from_url ) {
+        url_split = params.element.href.split( "#" );
+      } else {
+        url_split = document.URL.split("#");
+      }
+      return ( url_split.length ) ? url_split[1] : null;
     } catch ( error ) {
       console.table( error );
     }
@@ -260,6 +352,8 @@ class Screen {
 /**
  * Initiate
  */
-new Cursor();
-new Navigation();
-new Screen();
+window.onload = () => {
+  new Cursor();
+  new Navigation();
+  new Screen();
+}
