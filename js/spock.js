@@ -251,7 +251,6 @@ class Scroll { // Need to fix Scrolling and scroll keys
   }
 
   overwriteKeys( params = { event: null } ) {
-    // console.table( this.navigation_class );
     params.event.preventDefault();
     if ( ! [enum_key.arrow_up, enum_key.arrow_down].includes( params.event.keyCode ) ) { return; }
     let direction = 0;
@@ -292,11 +291,6 @@ class Navigation extends Scroll {
     let link_hash = null;
     for ( let index = 0; index < this.nav_links.length; index++ ) {
       link_hash = this.nav_links[index].href.split( "#" )[1];
-      console.table({
-        previous: params.previous,
-        current: params.current,
-        id: link_hash,
-      })
       if ( params.previous != null && params.previous == link_hash ) {
         this.nav_links[index].classList.remove( this.selected_class_name );
       }
