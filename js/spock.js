@@ -110,11 +110,13 @@ var enum_key = {
  * Shared Elements
  */
 var global = {
-  body: document.querySelector( "body" ),
+  body: document.body || document.documentElement,
   section_elements: document.getElementsByTagName( "section" ),
   nav_links: document.getElementsByTagName( "a" ),
-  main_element: document.getElementById( "main" ),
-  mobile_results: document.getElementById( "mobile_results" ),
+  main_element: document.getElementById( "window" ),
+
+  // for testing purposes only.
+  mobile_results: document.getElementById( "mobile_results" ), 
 }
 /**
  * Classes
@@ -138,6 +140,7 @@ class Cursor {
     } );
   }
 }
+
 class Scroll { // Need to fix Scrolling and scroll keys 
   nav_links = null;
   current_section_key = 0;
@@ -152,24 +155,13 @@ class Scroll { // Need to fix Scrolling and scroll keys
   }
 
   initEvents() {
-    // window.addEventListener( this.wheel_event, this.custom, this.wheel_option ); // modern desktop
-    // window.addEventListener( "touchmove", this.custom, this.wheel_option ); // mobile
     global.main_element.onscroll = ( event ) => {
-      // event_text = "onscroll";
       global.mobile_results.innerHTML = "onscroll";
-      console.table( event );
+      // console.table( event );
     };
-    
-    // onwheel = ( event ) => { 
-    //   global.mobile_results.innerHTML = "onwheel";
-    //   console.log( event.deltaY ); };
     onkeydown = ( event ) => { 
       global.mobile_results.innerHTML = "onkeydown";
       this.overwriteKeys( event ); };
-      // ontouchmove = ( event ) => { 
-      //   global.mobile_results.innerHTML = "ontouchmove";
-      // console.table( event ) }
-    // window.addEventListener( "touchmove", this.yDirection, false );
   }
 
   scrollToSection( params = { direction: null, anchor_name: null } ) { // Works
@@ -245,8 +237,29 @@ class Navigation extends Scroll {
     return null;
   }
 }
+
+class Screen {
+  sections = null;
+  body = null;
+
+  constructor() {
+    this.sections = global.section_elements;
+    this.body = global.body;
+    window.onresize = () => {
+      this.adjustSize();
+     };
+  }
+
+  adjustSize() {
+    let height = Math.max( this.body.scrollHeight, this.body.offsetHeight, this.body.clientHeight, this.body.scrollHeight, this.body.offsetHeight );
+    for ( let index = 0; index < this.sections.length; index++ ) {
+      this.sections.height = height;
+    };
+  }
+}
 /**
  * Initiate
  */
-let cursor_object = new Cursor();
-let nav_object = new Navigation();
+new Cursor();
+new Navigation();
+new Screen();
