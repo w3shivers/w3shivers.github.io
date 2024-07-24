@@ -106,6 +106,11 @@ var enum_key = {
   arrow_right : 39,
   arrow_down : 40
 };
+
+var enum_scroll_direction = {
+  down: 1,
+  up: -1,
+}
 /**
  * Shared Elements
  */
@@ -156,6 +161,11 @@ class Scroll { // Need to fix Scrolling and scroll keys
     key: 0,
     element: null
   };
+  previous_section = {
+    id: null,
+    key: 0,
+    element: null
+  };
   main_element = null;
   current_direction = 0;
   section_elements = null;
@@ -183,8 +193,11 @@ class Scroll { // Need to fix Scrolling and scroll keys
     try {
       this.determineHasDirectionChanged();
       if ( this.next_section.id == null || this.next_section.id === undefined ) { this.updateNextElement(); return; }
+      // let element = // Rudi - need to get up scroll flip  working. 
       let element_offset = this.next_section.element.getBoundingClientRect().y * this.current_direction;
-      if ( element_offset < ( this.main_element.clientHeight / 2 ) ) {
+      if ( element_offset < ( this.next_section.element.clientHeight / 2 ) ) {
+        // console.table(this.next_section.element);
+        console.log(this.current_direction)
         let previous_id = this.current_section.id;
         this.current_section = this.next_section;
         this.navigation_class.updateLinks({ previous: previous_id, current: this.current_section.id });
