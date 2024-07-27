@@ -1,21 +1,13 @@
 @import url( 'base.css' );
-@import url( 'themify-icons/themify-icons.css' ); 
-nav {
-    position: absolute;
-    padding: 5% 10%;
-    border: 1px solid yellow;
-    height: 100%;
-    background-color: var(--color-dark-blue);
-}
-
-nav a {
-    display: block;
-    padding: 20px;
-    color: aliceblue;
-    margin: 20px 0;
-    border: 1px solid whitesmoke;
-}
-
+@import url( 'themify-icons/themify-icons.css' );
+/* Sizes
+@media ( min-width: 600px ) { }
+@media ( min-width: 1000px ) { }
+@media ( min-width: 1200px ) { }
+@media ( min-width: 1400px ) { }
+@media ( min-width: 1900px ) { } 
+*/
+/* Main elements */
 main, section {
     width: 100%;
     min-height: 100%;
@@ -38,14 +30,56 @@ section {
     text-align: center;
 }
 
-section h1 {
-    margin-top: 20%;
+/* Navigation */
+aside {
+    display: flex;
+    -moz-box-pack: center;
+    justify-content: center;
+    -moz-box-align: center;
+    align-items: center;
+    position: fixed;
+    width: 90%;
+    max-width: 400px;
+    height: 100%;
+    background-color: rgb(17, 34, 64);
+    right: 0;
+}
+nav {
+    padding: 50px;
+}
+nav a {
+    text-decoration: none;
+    display: block;
+    padding: 20px;
+    color: var( --color-white );
+    margin: 20px 0;
+    border: 1px solid li;
+    text-align: center;
+    transition: all .5s;
+}
+
+nav a:hover {
+    color: var( --color-vibrant );
+    transform: scale(1.1);
+}
+
+nav a span {
+    color: var( --color-vibrant );
+    /* display: block; */
+}
+
+nav .selected {
+    color: var( --color-vibrant );
+    text-shadow: 0px 0px 5px var( --color-vibrant );
+    transform: scale(1.1);
 }
 
 /* Temp elements for testing */
+section h1 {
+    margin-top: 20%;
+}
 .myClass {
-    font-weight: bold;
-    color: burlywood;
+    color: tomato;
 }
 
 #mobile_results {

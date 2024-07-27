@@ -4,7 +4,7 @@
     --color-dark-blue: rgb( 15, 23, 42 );
     --color-dark-blue-tint: rgb( 23, 34, 59 );
     --color-vibrant: rgb( 234, 153, 40 );
-    --color-white: #eee;
+    --color-white: rgb(204, 214, 246);
     --color-shadow: rgba( 67, 110, 211, 0.15 );
     --cursor-box-shadow-small: 0px 0px 400px 100px var( --color-shadow );
     --cursor-box-shadow-large: 0px 0px 8000px 200px var( --color-shadow );

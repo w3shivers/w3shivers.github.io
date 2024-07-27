@@ -277,7 +277,7 @@ class Scroll { // Need to fix Scrolling and scroll keys
 
 }
 class Navigation extends Scroll {
-  selected_class_name = "myClass";
+  selected_class_name = "selected";
 
   constructor() {
     super();
