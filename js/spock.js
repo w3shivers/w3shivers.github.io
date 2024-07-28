@@ -119,6 +119,9 @@ var global = {
   section_elements: document.getElementsByTagName( "section" ),
   nav_links: document.getElementsByTagName( "a" ),
   main_element: document.getElementById( "window" ),
+  nav_menu: document.getElementsByClassName( "menu" ),
+  nav_aside: document.getElementById( "main-nav" ),
+  modal_background: document.getElementById( "modal_background" ),
 
   // for testing purposes only.
   mobile_results: document.getElementById( "mobile_results" ), 
@@ -140,8 +143,10 @@ class Cursor {
     document.addEventListener( "mousemove", ( event ) => {
       this.body.style.backgroundPositionX = event.pageX / -4 + "px";
       this.body.style.backgroundPositionY = event.pageY / -4 + "px";
-      this.cursor.style.top = event.pageY + "px";
-      this.cursor.style.left = event.pageX + "px";
+      if ( this.cursor ) {
+        this.cursor.style.top = event.pageY + "px";
+        this.cursor.style.left = event.pageX + "px";
+      }
     } );
   }
 }
@@ -278,10 +283,23 @@ class Scroll { // Need to fix Scrolling and scroll keys
 }
 class Navigation extends Scroll {
   selected_class_name = "selected";
+  menu = null;
+  background = null;
+  holder = null;
+  aside_margin = 0;
+  animations = {
+    menu: null,
+    background: null,
+    blur: null
+  }
 
   constructor() {
     super();
+    this.menu = global.nav_menu[0];
     this.navigation_class = this;
+    this.holder = global.nav_aside;
+    this.background = global.modal_background;
+    this.load();
     this.initClick();
     this.pageLoad();
   }
@@ -292,7 +310,100 @@ class Navigation extends Scroll {
     this.scrollToSection({ anchor_name: anchor })
   }
 
+  load() {
+    this.background.style.opacity = "0px";
+    this.holder.style.display = "flex";
+    this.holder.style.marginRight = ( ( ( this.holder.clientWidth ) * -1 ) - 50 ) + "px";
+  }
+
+  open() {
+    clearInterval( this.animations.menu );
+    clearInterval( this.animations.background );
+    clearInterval( this.animations.blur );
+    let menu_position = parseInt( this.holder.style.marginRight.replace( "px", "" ) );
+    let menu_speed = ( 1000 / ( menu_position * -1 ) );
+    this.animations.menu = setInterval( () => {
+      if ( menu_position >= 0 ) {
+        clearInterval( this.animations.menu );
+        return;
+      }
+      menu_position = menu_position + menu_speed; 
+      this.holder.style.marginRight = menu_position + 'px'; 
+    }, 0.0001 );
+
+    this.main_element.classList.add( "modal_open" );
+    let blur_percentage = 0;
+    this.animations.blur = setInterval( () => {
+      if ( blur_percentage >= 2 ) {
+        clearInterval( this.animations.blur );
+        return;
+      }
+      blur_percentage = blur_percentage + 0.01;
+      this.main_element.style.filter = "blur( " + blur_percentage + "px )";
+    }, 0.0001 );
+
+    this.background.style.display = "block";
+    let background_opacity = 0;
+    this.animations.background = setInterval(() => {
+      if ( background_opacity >= 0.3 ) {
+        clearInterval( this.animations.background );
+        return;
+      }
+      background_opacity = background_opacity + 0.001;
+      this.background.style.opacity = background_opacity;
+    }, 0.001 );
+  }
+
+  close() {
+    clearInterval( this.animations.menu );
+    clearInterval( this.animations.background );
+    clearInterval( this.animations.blur );
+    let menu_position = parseInt( this.holder.style.marginRight.replace( "px", "" ) );
+    let menu_speed = ( 1500 / ( ( ( this.holder.clientWidth * -1 ) - 50 ) ) );
+    this.animations.menu = setInterval( () => {
+      if ( menu_position <= ( ( ( this.holder.clientWidth ) * -1 ) - 50 ) ) {
+        clearInterval( this.animations.menu );
+        return;
+      }
+      menu_position = menu_position + menu_speed; 
+      this.holder.style.marginRight = menu_position + 'px'; 
+    }, 0.0001 );
+
+    this.main_element.classList.add( "modal_open" );
+    let blur_percentage = 2;
+    this.animations.blur = setInterval( () => {
+      if ( blur_percentage <= 0 ) {
+        clearInterval( this.animations.blur );
+        return;
+      }
+      blur_percentage = blur_percentage - 0.05;
+      this.main_element.style.filter = "blur( " + blur_percentage + "px )";
+    }, 0.0001 );
+
+    let background_opacity = 0.3;
+    this.animations.background = setInterval(() => {
+      if ( background_opacity <= 0 ) {
+        clearInterval( this.animations.background );
+        this.background.style.display = "none";
+        return;
+      }
+      background_opacity = background_opacity - 0.005;
+      this.background.style.opacity = background_opacity;
+    }, 0.001 );
+  }
+
   initClick() {
+    this.menu.addEventListener( "click", () => { 
+      this.menu.classList.toggle( "opened" );
+      this.menu.setAttribute( "aria-expanded", this.menu.classList.contains( "opened" ) );
+      if ( this.menu.classList.contains( 'opened' ) ) {
+        this.open();
+      } else {
+        this.close();
+      }
+    });
+
+    /* Navigation items */
     for ( let index = 0; index < this.nav_links.length; index++ ) {
       this.nav_links[index].addEventListener( "click", ( event ) => {
         this.scroll({ event: event, element: this.nav_links[index] });

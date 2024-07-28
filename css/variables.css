@@ -1,11 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 :root {
-    --background-grid: linear-gradient( to right, var( --color-dark-blue-tint ) 1px, transparent 1px ), linear-gradient( to bottom, var( --color-dark-blue-tint ) 1px, transparent 1px );
+    --background-grid: linear-gradient( to right, var( --color-medium-blue ) 1px, transparent 1px ), linear-gradient( to bottom, var( --color-medium-blue ) 1px, transparent 1px );
     --color-dark-blue: rgb( 15, 23, 42 );
     --color-dark-blue-tint: rgb( 23, 34, 59 );
+    --color-medium-blue: rgb(17, 34, 64);
     --color-vibrant: rgb( 234, 153, 40 );
     --color-white: rgb(204, 214, 246);
     --color-shadow: rgba( 67, 110, 211, 0.15 );
+    --light_secondary: #8892b0;
     --cursor-box-shadow-small: 0px 0px 400px 100px var( --color-shadow );
     --cursor-box-shadow-large: 0px 0px 8000px 200px var( --color-shadow );
 }
