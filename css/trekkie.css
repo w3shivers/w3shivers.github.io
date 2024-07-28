@@ -55,6 +55,11 @@ main.modal_open {
     position: fixed;
     right: 0;
     z-index: 12;
+    transition: all .5s;
+}
+
+.menu:hover {
+    transform: scale(1.2);
 }
 
 .line {
