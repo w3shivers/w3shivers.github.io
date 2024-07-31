@@ -334,7 +334,7 @@ class Navigation extends Scroll {
     this.main_element.classList.add( "modal_open" );
     let blur_percentage = 0;
     this.animations.blur = setInterval( () => {
-      if ( blur_percentage >= 2 ) {
+      if ( blur_percentage >= 4 ) {
         clearInterval( this.animations.blur );
         return;
       }
@@ -370,7 +370,7 @@ class Navigation extends Scroll {
     }, 0.0001 );
 
     this.main_element.classList.add( "modal_open" );
-    let blur_percentage = 2;
+    let blur_percentage = 4;
     this.animations.blur = setInterval( () => {
       if ( blur_percentage <= 0 ) {
         clearInterval( this.animations.blur );

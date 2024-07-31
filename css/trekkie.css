@@ -26,12 +26,22 @@ main {
 
 section {
     border-bottom: 1px solid red;
-    display: block;
+    display: flex;
     text-align: center;
+
 }
 
 main.modal_open {
     filter: blur( 0px );
+}
+
+/* Columns */
+.columns {
+    display: flex;
+    -moz-box-pack: center;
+    justify-content: center;
+    -moz-box-align: center;
+    align-items: center;
 }
 
 /* Modal */
@@ -168,10 +178,23 @@ nav .selected {
     transform: scale(1.1);
 }
 
-/* Temp elements for testing */
-section h1 {
-    margin-top: 0;
+/* Home section */
+.home-content {
+    height: 100%;
 }
+.greet {
+    color: var( --color-vibrant );
+}
+
+/* .h1 {
+
+} */
+
+
+/* Temp elements for testing */
+/* section h1 {
+    margin-top: 0;
+} */
 .myClass {
     color: tomato;
 }
