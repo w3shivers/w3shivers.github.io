@@ -28,7 +28,8 @@ section {
     border-bottom: 1px solid red;
     display: flex;
     text-align: center;
-
+    align-items: center;
+    justify-content: center;
 }
 
 main.modal_open {
@@ -178,18 +179,88 @@ nav .selected {
     transform: scale(1.1);
 }
 
+/* Action links */
+.action-link {
+    display: inline-block;
+    padding: 20px;
+    border: 1.5px solid var( --color-vibrant );
+    border-radius: 7px;
+    outline-width: 1px;
+    outline-offset: 0;
+    outline-width: 0;
+    outline-color: var( --color-vibrant );
+    outline-style: solid;
+    color: var( --color-vibrant );
+    font-weight: 300;
+}
+
+.action-link:hover {
+    animation: animateOutline 1.5s ease infinite;
+    transform: scale(1.1);
+    color: var( --color-white );
+    text-shadow: none;
+    border-radius: 0;
+}
+
+@keyframes animateOutline {
+    0% {
+        outline-offset: 0;
+        outline-color: rgba(0, 130, 206, 0);
+    }
+    
+    10% {
+      outline-width: 1px;
+      outline-color: rgba(234, 153, 40, 0.75);
+    }
+  
+    /* The animation finishes at 50% */
+    50% {
+      outline-width:2px;
+      outline-offset: 10px;
+      outline-color: rgba(0, 130, 206, 0);
+    }
+  
+    100% {
+      outline-width: 2px;
+      outline-offset: 10px;
+      outline-color: rgba(102, 102, 102, 0);
+    }
+  }
+
 /* Home section */
 .home-content {
     height: 100%;
+    text-align: left;
+    max-width: 80%;
+    flex: content;
 }
 .greet {
     color: var( --color-vibrant );
 }
+h1.name, h2.tagline {
+    line-height: 1;
+    font-size: clamp( 40px, 8vw, 80px );
+}
 
-/* .h1 {
+h1.name {
+    margin: 20px 0;
+}
 
-} */
-
+h2.tagline {
+    font-size: clamp( 30px, 5vw, 80px );
+    color: var(--light_secondary) ;
+}
+h3 {
+    font-weight: 400;
+    font-size: clamp( 16px, 1.2vw, 24px );
+    font-stretch:ultra-expanded;
+}
+.intro {
+    line-height: 1.5;
+    font-size: clamp( 16px, 1.2vw, 24px );
+    margin: 40px 0;
+    max-width: 700px;
+}
 
 /* Temp elements for testing */
 /* section h1 {
