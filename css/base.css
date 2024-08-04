@@ -59,11 +59,32 @@ body:hover #cursor {
 h1, h2, h3, h4, h5, h6 {
     font-family: "Open Sans", sans-serif;
 }
-
+h3 {
+    font-stretch:ultra-expanded;
+    font-size: clamp( 21px, 1.8vw, 30px );
+    color: var( --color-white );
+}
+h3 span {
+    color: var( --color-vibrant );
+    font-weight: 400;
+    font-size: clamp( 18px, 1.2vw, 24px );
+    vertical-align: top;
+    display: inline-block;
+    margin-top: 2px;
+    margin-right: 5px;
+}
 p {
+    font-size: clamp( 14px, 1.1vw, 16px );
     color: var( --light_secondary );
     font-weight: light;
     font-stretch: expanded;
+    padding-bottom: 10px;
+    line-height: 1.5;
+
+}
+p:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 a {
     color: var( --color-white );
