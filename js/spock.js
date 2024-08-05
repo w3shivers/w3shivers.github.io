@@ -117,7 +117,7 @@ var enum_scroll_direction = {
 var global = {
   body: document.body || document.documentElement,
   section_elements: document.getElementsByTagName( "section" ),
-  nav_links: document.getElementsByTagName( "a" ),
+  nav_links: document.getElementsByClassName( "nav" ),
   main_element: document.getElementById( "window" ),
   nav_menu: document.getElementsByClassName( "menu" ),
   nav_aside: document.getElementById( "main-nav" ),

@@ -73,6 +73,18 @@ h3 span {
     margin-top: 2px;
     margin-right: 5px;
 }
+h4 {
+    font-size: 16px;
+    font-weight: 400;
+    color: var( --color-vibrant );
+}
+h4 span {
+    font-size: 14px;
+    vertical-align: top;
+    display: inline-block;
+    margin-top: .25px;
+    margin-right: 5px;
+}
 p {
     font-size: clamp( 14px, 1.1vw, 16px );
     color: var( --light_secondary );
