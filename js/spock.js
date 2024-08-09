@@ -121,7 +121,10 @@ var global = {
   main_element: document.getElementById( "window" ),
   nav_menu: document.getElementsByClassName( "menu" ),
   nav_aside: document.getElementById( "main-nav" ),
+  nav_background: document.getElementById( "nav_background" ),
+  modal_links: document.getElementsByClassName( "modal-link" ),
   modal_background: document.getElementById( "modal_background" ),
+  modal_container: document.getElementById( "modal_container" ),
 
   // for testing purposes only.
   mobile_results: document.getElementById( "mobile_results" ), 
@@ -129,6 +132,77 @@ var global = {
 /**
  * Classes
  */
+class Modal {
+  background;
+  container;
+  links;
+  main;
+  animations = {
+    modal: null,
+    background: null,
+    blur: null
+  } 
+  constructor() {
+    this.background = global.modal_background;
+    this.container = global.modal_container;
+    this.links = global.modal_links;
+    this.main = global.main_element;
+    this.nav = global.nav_menu[0];
+    this.initClick();
+  }
+
+  initClick() {
+    for ( let index = 0; index < this.links.length; index++ ) {
+      this.links[index].addEventListener( "click", ( ) => {
+        this.openBox({ value: this.links[index].getAttribute( "data-link" ) });
+      });
+    }
+  }
+
+  openBox( params = { value: null } ) {
+    clearInterval( this.animations.modal );
+    clearInterval( this.animations.background );
+    clearInterval( this.animations.blur );
+    let modal_box = this.container.querySelectorAll('[data-modal="' + params.value + '"]')[0];
+    this.container.style.display = "flex";
+
+    this.main.classList.add( "modal_open" );
+    this.nav.classList.add( "modal_open" );
+    let blur_percentage = 0;
+    this.animations.blur = setInterval( () => {
+      if ( blur_percentage >= 3 ) {
+        clearInterval( this.animations.blur );
+        return;
+      }
+      blur_percentage = blur_percentage + 0.05;
+      this.main.style.filter = "blur( " + blur_percentage + "px )";
+      this.nav.style.filter = "blur( " + blur_percentage + "px )";
+    }, 0.0001 );
+
+    this.background.style.display = "block";
+    let background_opacity = 0;
+    this.animations.background = setInterval(() => {
+      if ( background_opacity >= 0.3 ) {
+        clearInterval( this.animations.background );
+        return;
+      }
+      background_opacity = background_opacity + 0.001;
+      this.background.style.opacity = background_opacity;
+    }, 0.001 );
+
+    modal_box.style.display = "block";
+    let modal_opacity = 0;
+    this.animations.modal = setInterval(() => {
+      if ( modal_opacity >= 1 ) {
+        clearInterval( this.animations.modal );
+        return;
+      }
+      modal_opacity = modal_opacity + 0.007;
+      modal_box.style.opacity = modal_opacity;
+    }, 0.001 );
+
+  }
+}
 class Cursor {
   cursor;
   body;
@@ -201,8 +275,6 @@ class Scroll { // Need to fix Scrolling and scroll keys
       // let element = // Rudi - need to get up scroll flip  working. 
       let element_offset = this.next_section.element.getBoundingClientRect().y * this.current_direction;
       if ( element_offset < ( this.next_section.element.clientHeight / 2 ) ) {
-        // console.table(this.next_section.element);
-        console.log(this.current_direction)
         let previous_id = this.current_section.id;
         this.current_section = this.next_section;
         this.navigation_class.updateLinks({ previous: previous_id, current: this.current_section.id });
@@ -298,7 +370,7 @@ class Navigation extends Scroll {
     this.menu = global.nav_menu[0];
     this.navigation_class = this;
     this.holder = global.nav_aside;
-    this.background = global.modal_background;
+    this.background = global.nav_background;
     this.load();
     this.initClick();
     this.pageLoad();
@@ -402,7 +474,9 @@ class Navigation extends Scroll {
         this.close();
       }
     });
-
+    this.background.addEventListener( "click", () => {
+      this.menu.click();
+    });
     /* Navigation items */
     for ( let index = 0; index < this.nav_links.length; index++ ) {
       this.nav_links[index].addEventListener( "click", ( event ) => {
@@ -474,4 +548,5 @@ window.onload = () => {
   new Cursor();
   new Navigation();
   new Screen();
+  new Modal();
 }

@@ -25,7 +25,7 @@
     </head>
     <body>
         <div id="cursor"></div>
-        <div id="modal_background"></div>
+        <div id="nav_background"></div>
         <button class="menu">
             <svg width="50" height="50" viewBox="0 0 100 100">
               <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
@@ -50,7 +50,7 @@
                     <h1>Rudi Esterhuysen</h1>
                     <h2>I'm the glue that holds your tech together.</h2>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non eleifend eros, non iaculis tortor. Vivamus blandit eleifend turpis, quis maximus ipsum tristique in. Morbi aliquet <a href="#">a link maybe</a> malesuada.</p>
-                    <a href="#" class="action-link">Some action button</a>
+                    <a href="#projects" class="nav action-link">View my work</a>
                 </div>
             </section>
             <section id="about">
@@ -77,7 +77,26 @@
                 </div>
             </section>
             <section id="experience">
-                <h2><span>[2]</span> Experience</h2>
+                <div class="experience_container">
+                    <h4><span>[2]</span> My experience</h4>
+                    <h3>Where I've worked</h3>
+                    <div class="cv-item">
+                        <h5>Binary City</h5>
+                        <h4>Senior software developer</h4>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non eleifend eros, non iaculis tortor. Vivamus blandit eleifend turpis, quis maximus ipsum tristique in.  Sed non eleifend eros, non iaculis tortor.</p>
+                    </div>
+                    <div class="cv-item">
+                        <h5>iWits</h5>
+                        <h4>Senior software developer & Co-founder</h4>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non eleifend eros, non iaculis tortor. Vivamus blandit eleifend turpis, quis maximus ipsum tristique in.  Sed non eleifend eros, non iaculis tortor.</p>
+                    </div>
+                    <div class="cv-item">
+                        <h5>Namibia Media Holdings</h5>
+                        <h4>Senior software developer & Co-founder</h4>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non eleifend eros, non iaculis tortor. Vivamus blandit eleifend turpis, quis maximus ipsum tristique in.  Sed non eleifend eros, non iaculis tortor.</p>
+                    </div>
+                    <a href="documents/Resume_Rudi_Esterhuysen.pdf" target="_blank" class="action-link">My resume</a>
+                </div>
             </section>
             <section id="projects">
                 <div class="project_container">
@@ -100,7 +119,7 @@
                                 <a href="#">JavaScript</a>
                                 <a href="#">CSS</a>
                             </div>
-                            <a href="#" class="action-link">Learn more</a>
+                            <a class="action-link modal-link" data-link="first">Learn more</a>
                         </div>
                     </div>
                     <div class="feature-container">
@@ -145,7 +164,7 @@
                     </div>
                     <h4 class="other-heading">Other Noteworthy Projects</h4>
                     <div class="other-container">
-                        <div class="other-project">
+                        <div class="other-project modal-link" data-link="second">
                             <h5>Project Title</h5>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non eleifend eros, non iaculis tortor. Vivamus blandit eleifend turpis, quis maximus ipsum tristique in.</p>
                             <div class="languages">
@@ -222,6 +241,24 @@
                 </div>
             </section>
         </main>
+        <div id="modal_background"></div>
+        <div id="modal_container">
+            <div class="modal-box" data-modal="first">
+                <h3>First box</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non eleifend eros, non iaculis tortor. Vivamus blandit eleifend turpis, quis maximus ipsum tristique in. Morbi aliquet <a href="#">a link maybe</a> malesuada.</p>
+                <p>Etiam vitae nulla interdum, imperdiet lectus vel, ultricies arcu. Quisque molestie erat nisi, eget elementum mauris placerat in. Quisque eget lorem condimentum dolor finibus sollicitudin. Duis sit amet nisl molestie, lacinia ipsum vitae, vestibulum nisl. Nullam facilisis aliquam mi et molestie. Maecenas et rutrum velit, sed malesuada augue. Integer dictum metus metus, vel cursus metus faucibus sagittis. Sed ut cursus felis.</p>
+                <p>Aenean porta sapien a ex tincidunt venenatis vel vitae neque. <a href="#">Nulla volutpat turpis</a> suscipit euismod mattis. Mauris lorem nisl, lacinia quis dictum eget, tincidunt vel lorem. Donec fermentum tempus nisl. Morbi enim odio, sodales sed feugiat in, dictum non est.</p>
+                <p>Donec ac purus ante. Aliquam vel dolor nisl. Ultrices mi at, semper elit. Quisque sit amet condimentum massa. Aliquam mauris diam, dictum at gravida nec, fringilla ut lorem.</p>
+            </div>
+
+            <div class="modal-box" data-modal="second">
+                <h3>Second box</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non eleifend eros, non iaculis tortor. Vivamus blandit eleifend turpis, quis maximus ipsum tristique in. Morbi aliquet <a href="#">a link maybe</a> malesuada.</p>
+                <p>Etiam vitae nulla interdum, imperdiet lectus vel, ultricies arcu. Quisque molestie erat nisi, eget elementum mauris placerat in. Quisque eget lorem condimentum dolor finibus sollicitudin. Duis sit amet nisl molestie, lacinia ipsum vitae, vestibulum nisl. Nullam facilisis aliquam mi et molestie. Maecenas et rutrum velit, sed malesuada augue. Integer dictum metus metus, vel cursus metus faucibus sagittis. Sed ut cursus felis.</p>
+                <p>Aenean porta sapien a ex tincidunt venenatis vel vitae neque. <a href="#">Nulla volutpat turpis</a> suscipit euismod mattis. Mauris lorem nisl, lacinia quis dictum eget, tincidunt vel lorem. Donec fermentum tempus nisl. Morbi enim odio, sodales sed feugiat in, dictum non est.</p>
+                <p>Donec ac purus ante. Aliquam vel dolor nisl. Ultrices mi at, semper elit. Quisque sit amet condimentum massa. Aliquam mauris diam, dictum at gravida nec, fringilla ut lorem.</p>
+            </div>
+        </div>
         <script src="js/spock.js" type="text/javascript"></script>
     </body>
 </html>

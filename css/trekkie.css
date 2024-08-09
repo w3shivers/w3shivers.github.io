@@ -43,7 +43,8 @@ main.modal_open {
 }
 
 /* Modal */
-#modal_background {
+
+#nav_background, #modal_background {
     background-color: var( --color-dark-blue );
     opacity: 30%;
     position: fixed;
@@ -51,6 +52,38 @@ main.modal_open {
     width: 100%;
     height: 100%;
     display: none;
+}
+
+#modal_background {
+    display: none;
+    z-index: 20;
+    bottom: 0;
+}
+
+#modal_container {
+    position: absolute;
+    display: none;
+    z-index: 21;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+#modal_container .modal-box {
+    display: none;
+    background-color: var( --color-medium-blue );
+    box-shadow: 0px 0px 50px var(--color-dark-blue);
+    max-height: 80%;
+    width: 80%;
+    max-width: 700px;
+    overflow-y: auto;
+    padding: 50px;
+}
+
+#modal_container .modal-box h3 {
+    margin-bottom: 20px;
 }
 
 /* Navigation */
@@ -179,6 +212,7 @@ nav .selected {
 
 /* Action links */
 .action-link {
+    cursor: pointer;
     display: inline-block;
     padding: 15px 20px;
     border: 1.5px solid var( --color-vibrant );
@@ -413,7 +447,6 @@ nav .selected {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    /* background: no-repeat center  */
     position: absolute;
     width: 100%;
     height: 100%;
@@ -560,7 +593,35 @@ nav .selected {
     background-image: url( '../images/temp_project_image.png' );
 }
 
+/* Experience Section */
+.experience_container {
+    width: 90%;
+    max-width: 700px;
+    padding: 50px 0;
+}
 
+.experience_container .action-link {
+    margin-top: 20px;
+}
+
+.experience_container h3 {
+    margin-bottom: 20px;
+}
+
+.experience_container .cv-item {
+    padding-bottom: 20px;
+    text-align: left;
+}
+
+.experience_container .cv-item p {
+    margin-top: 5px;
+}
+
+.experience_container .cv-item h5 {
+    font-size: 18px;
+}
+
+/* Animations */
 @keyframes animateOutline {
     0% {
         outline-offset: 0;
