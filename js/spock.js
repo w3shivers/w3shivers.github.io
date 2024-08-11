@@ -159,13 +159,65 @@ class Modal {
     }
   }
 
+  closeClick( params = { modal_box: null } ) {
+    this.container.addEventListener( "click", ( event ) => {
+      if ( this.container === event.target && this.container.contains( event.target ) ) {
+        this.closeBox({ modal_box: params.modal_box });
+      }
+    });
+    let close_button = params.modal_box.querySelectorAll('.close')[0];
+    close_button.addEventListener( "click", () => {
+      this.closeBox({ modal_box: params.modal_box });
+    });
+  }
+
+  closeBox( params = { modal_box: null } ) {
+    clearInterval( this.animations.modal );
+    clearInterval( this.animations.background );
+    clearInterval( this.animations.blur );
+    this.main.classList.remove( "modal_open" );
+    this.nav.classList.remove( "modal_open" );
+    let blur_percentage = 3;
+    this.animations.blur = setInterval( () => {
+      if ( blur_percentage <= 0 ) {
+        clearInterval( this.animations.blur );
+        return;
+      }
+      blur_percentage = blur_percentage - 0.05;
+      this.main.style.filter = "blur( " + blur_percentage + "px )";
+      this.nav.style.filter = "blur( " + blur_percentage + "px )";
+    }, 0.0001 );
+    let background_opacity = 0.3;
+    this.animations.background = setInterval(() => {
+      if ( background_opacity <= 0 ) {
+        clearInterval( this.animations.background );
+        this.background.style.display = "none";
+        return;
+      }
+      background_opacity = background_opacity - 0.005;
+      this.background.style.opacity = background_opacity;
+    }, 0.001 );
+
+    let modal_opacity = parseInt( params.modal_box.style.opacity ); 
+    this.animations.modal = setInterval(() => {
+      if ( modal_opacity <= 0 ) {
+        clearInterval( this.animations.modal );
+        params.modal_box.style.display = "none";
+        this.container.style.display = "none";
+        return;
+      }
+      modal_opacity = modal_opacity - 0.01;
+      params.modal_box.style.opacity = modal_opacity;
+    }, 0.001 );
+  }
+  
   openBox( params = { value: null } ) {
     clearInterval( this.animations.modal );
     clearInterval( this.animations.background );
     clearInterval( this.animations.blur );
     let modal_box = this.container.querySelectorAll('[data-modal="' + params.value + '"]')[0];
     this.container.style.display = "flex";
-
+    this.closeClick({ modal_box:modal_box });
     this.main.classList.add( "modal_open" );
     this.nav.classList.add( "modal_open" );
     let blur_percentage = 0;
@@ -200,7 +252,6 @@ class Modal {
       modal_opacity = modal_opacity + 0.007;
       modal_box.style.opacity = modal_opacity;
     }, 0.001 );
-
   }
 }
 class Cursor {
@@ -441,7 +492,7 @@ class Navigation extends Scroll {
       this.holder.style.marginRight = menu_position + 'px'; 
     }, 0.0001 );
 
-    this.main_element.classList.add( "modal_open" );
+    this.main_element.classList.remove( "modal_open" );
     let blur_percentage = 3;
     this.animations.blur = setInterval( () => {
       if ( blur_percentage <= 0 ) {
