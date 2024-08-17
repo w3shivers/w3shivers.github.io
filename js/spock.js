@@ -127,7 +127,7 @@ var global = {
   modal_container: document.getElementById( "modal_container" ),
 
   // for testing purposes only.
-  mobile_results: document.getElementById( "mobile_results" ), 
+  loader: document.getElementById( "loader-container" ), 
 }
 /**
  * Classes
@@ -576,10 +576,14 @@ class Navigation extends Scroll {
 class Screen {
   sections = null;
   body = null;
+  loader = null;
+  loader_animation = null;
 
   constructor() {
     this.sections = global.section_elements;
     this.body = global.body;
+    this.loader = global.loader;
+    this.fadeLoader();
     window.onresize = () => {
       this.adjustSize();
      };
@@ -590,6 +594,20 @@ class Screen {
     for ( let index = 0; index < this.sections.length; index++ ) {
       this.sections.height = height;
     };
+  }
+
+  fadeLoader() {
+    clearInterval(this.loader_animation);
+    let loader_opacity = 1;
+    this.loader_animation = setInterval(() => {
+      if ( loader_opacity <= 0 ) {
+        this.loader.style.display = "none";
+        clearInterval( this.loader_animation );
+        return;
+      }
+      loader_opacity = loader_opacity - 0.01;
+      this.loader.style.opacity = loader_opacity;
+    }, 0.001 );
   }
 }
 /**
