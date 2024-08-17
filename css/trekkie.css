@@ -648,8 +648,16 @@ nav .selected {
     color: var(--color-vibrant);
 }
 
-.project_container .temp-image::before {
-    background-image: url( '../images/temp_project_image.png' );
+.project_container .biometric-image::before {
+    background-image: url('../images/bio-metric-device-integrations.jpg');
+}
+
+.project_container .api-image::before {
+    background-image: url('../images/api-integration.jpg');
+}
+
+.project_container .system-integration-image::before {
+    background-image: url('../images/system-integration.jpg');
 }
 
 @media ( max-width: 850px ) { 
@@ -753,23 +761,4 @@ nav .selected {
       outline-offset: 10px;
       outline-color: rgba(102, 102, 102, 0);
     }
-}
-
-/* Temp elements for testing */
-/* section h1 {
-    margin-top: 0;
-} */
-.myClass {
-    color: tomato;
-}
-
-#mobile_results {
-    position: fixed;
-    color: antiquewhite;
-    background-color: rgb( 179, 58, 58 );
-    margin-top: 2%;
-    right: 0;
-    width: 70%;
-    padding: 20px 40px;
-    font-size: 16px;
 }
