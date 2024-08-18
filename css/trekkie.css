@@ -110,13 +110,6 @@ main.modal_open {
     filter: blur( 0px );
 }
 
-header .logo {
-    width: 70px;
-    position: fixed;
-    margin: 10px 15px;
-    padding: 10px 15px;
-}
-
 /* Columns */
 .columns {
     padding: 50px;
