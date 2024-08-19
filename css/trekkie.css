@@ -723,7 +723,7 @@ nav .selected {
 }
 
 .project_container .biometric-image::before {
-    background-image: url('../images/bio-metric-device-integrations.jpg');
+    background-image: url('../images/bio-metric-device-integration.jpg');
 }
 
 .project_container .api-image::before {
